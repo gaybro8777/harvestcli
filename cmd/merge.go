@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/algolia/harvestcli/utils"
 	"github.com/texttheater/golang-levenshtein/levenshtein"
 )
 
@@ -72,15 +73,19 @@ func (c *mergeCommand) Run() {
 
 	for {
 		nextLine, err := c.readLine(csvr)
+		shouldContinue := err == nil && nextLine != nil
 
 		isTerminal := c.isTerminal(line, nextLine)
 
 		if isTerminal {
-			c.write(line)
+			err = utils.WriteCSV(c.output, line)
+			if err != nil {
+				log.Fatalf("Could not write terminal search %s\n", err)
+			}
 			c.mergeCount++
 		}
 
-		if err != nil {
+		if !shouldContinue {
 			break
 		}
 		line = nextLine
@@ -148,16 +153,6 @@ func (c *mergeCommand) readLine(csvr *csv.Reader) ([]string, error) {
 	}
 	c.lineCount++
 	return record, nil
-}
-
-func (c *mergeCommand) write(line []string) {
-	writer := csv.NewWriter(c.output)
-	defer writer.Flush()
-
-	err := writer.Write(line)
-	if err != nil {
-		log.Fatalf("Write failure: %s", err)
-	}
 }
 
 func (c *mergeCommand) d(log string) {

@@ -55,7 +55,6 @@ fi
 
 printf "Loading into BQ...\n"
 
-
 printf "Target table is %s, checking it does not already exists...\n" $BQ_TABLE
 bq show $BQ_TABLE
 
