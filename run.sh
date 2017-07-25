@@ -21,7 +21,7 @@ mkdir -p $OUTPUT_DIR/searches
 
 printf "Fetching events...\n"
 gsutil -m cp -r gs://harvestevents/1/click/$APP_ID/$FULL_DATE/* $OUTPUT_DIR/clicks
-gsutil -m cp -r gs://harvestevents/1/search/$APP_ID/$FULL_DATE/ $OUTPUT_DIR/searches
+gsutil -m cp -r gs://harvestevents/1/search/$APP_ID/$FULL_DATE/* $OUTPUT_DIR/searches
 
 printf "Merging logs...\n"
 find $OUTPUT_DIR/clicks -name '*.json' -exec cat {} \; > $OUTPUT_DIR/clicks.json
